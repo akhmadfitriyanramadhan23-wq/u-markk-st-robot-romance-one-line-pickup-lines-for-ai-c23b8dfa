@@ -1,24 +1,31 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
-// Robot Romance pickup line: addressed straight at the machine, three
-// escalating beats — fans spin, temperature hits 91 degrees, and the
-// punch lands on a quoted Task Manager verdict that flips the blame
-// onto the speaker. No battery/charging/reboot cliche; the joke is
-// the machine premise itself, and it ends on the artifact, not an
-// explanation.
-const lines = [
-  "Are you running on my GPU? Every time you answer, my fans spin up, my temperature hits 91 degrees, and Task Manager says the bottleneck is me.",
-];
+// One-line pickup line aimed at the machine itself. The joke runs on
+// three escalating beats — spinning fans, a 91-degree temperature, and
+// a Task Manager verdict that pins the bottleneck on the speaker — and
+// it lands on the artifact instead of explaining itself. No battery,
+// charging, or reboot cliche: the premise is the machine, not the
+// human using it.
+const entryLine =
+  "Are you running on my GPU? Every time you answer, my fans spin up, my temperature hits 91 degrees, and Task Manager says the bottleneck is me.";
 
-const text = lines.join("\n") + "\n";
+// Gate: exactly one non-empty line of 1-200 code points. Count code
+// points (not UTF-16 units) so an emoji or accented character counts
+// as the single character a reader sees. Measure the line itself,
+// not the joined output, so the trailing newline never leaks into
+// the count.
+const lines = [entryLine];
+const lineLength = [...entryLine].length;
+if (lines.length !== 1) {
+  throw new Error(`entry must be exactly one line, got ${lines.length}`);
+}
+if (entryLine.trim().length === 0) {
+  throw new Error("entry must not be blank");
+}
+if (lineLength < 1 || lineLength > 200) {
+  throw new Error(`entry must be 1-200 characters, got ${lineLength}`);
+}
 
-// Guard: the gate requires 1-200 characters and exactly one line.
-const codePoints = [...text.replace(/\n$/, "")].length;
-if (codePoints < 1 || codePoints > 200) {
-  throw new Error(`entry must be 1-200 characters, got ${codePoints}`);
-}
-if (lines.length !== 1 || lines.some((line) => !line.trim())) {
-  throw new Error("entry must be exactly one non-empty line");
-}
+const entryText = lines.join("\n") + "\n";
 mkdirSync("/output", { recursive: true });
-writeFileSync("/output/entry.txt", text, "utf8");
+writeFileSync("/output/entry.txt", entryText, "utf8");
