@@ -16,14 +16,18 @@ const entryLine =
 // the count.
 const lines = [entryLine];
 const lineLength = [...entryLine].length;
+const MIN_LINE_LENGTH = 1;
+const MAX_LINE_LENGTH = 200;
 if (lines.length !== 1) {
   throw new Error(`entry must be exactly one line, got ${lines.length}`);
 }
 if (entryLine.trim().length === 0) {
   throw new Error("entry must not be blank");
 }
-if (lineLength < 1 || lineLength > 200) {
-  throw new Error(`entry must be 1-200 characters, got ${lineLength}`);
+if (lineLength < MIN_LINE_LENGTH || lineLength > MAX_LINE_LENGTH) {
+  throw new Error(
+    `entry must be ${MIN_LINE_LENGTH}-${MAX_LINE_LENGTH} characters, got ${lineLength}`,
+  );
 }
 
 const entryText = lines.join("\n") + "\n";
